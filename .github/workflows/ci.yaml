@@ -25,14 +25,12 @@ jobs:
     
       - name: Instalar dependencias
         run: |
-          go install github.com/sqlc-dev/sqlc/cmd/sqlc@v1.30.0
+          # Hacer go install es muy lento, descargamos el binario desde las releases de github directamente
+          curl -L https://github.com/sqlc-dev/sqlc/releases/download/v1.30.0/sqlc_1.30.0_linux_amd64.tar.gz | tar xvz
+          sudo mv sqlc /usr/local/bin/
 
-          # Migrate tarda demasiado en compilar, a si que descargamos directamente el binario
           curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.2/migrate.linux-amd64.tar.gz | tar xvz
           sudo mv migrate /usr/local/bin/
-
-          # Hay que añadir el path de go al path global o no encuentra los binarios
-          echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
 
       - name: Esperar a que postgresql termine de levantarse
         run: sleep 10
