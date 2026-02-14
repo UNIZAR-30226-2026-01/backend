@@ -25,7 +25,7 @@ jobs:
     
       - name: Instalar dependencias
         run: |
-          go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@v4.18.3
+          go install github.com/sqlc-dev/sqlc/cmd/sqlc@v1.30.0
 
           # Migrate tarda demasiado en compilar, a si que descargamos directamente el binario
           curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.2/migrate.linux-amd64.tar.gz | tar xvz
