@@ -16,7 +16,7 @@ sqlc: migrate-up
 build: sqlc
 	go build -o bin/$(BINARY_NAME) cmd/main.go
 
-run: build
+run: 
 	./bin/$(BINARY_NAME)
 
 clean:
