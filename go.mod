@@ -1,6 +1,6 @@
 module github.com/UNIZAR-30226-2026-01/laser_chess_backend
 
-go 1.25.7
+go 1.22.2
 
 require (
 	github.com/bytedance/gopkg v0.1.3 // indirect
