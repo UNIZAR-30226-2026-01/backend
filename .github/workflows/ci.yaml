@@ -1,0 +1,41 @@
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Levantar base de datos
+        run: docker compose up -d
+        env:
+          # Rellenamos las variables de entorno secretas
+          # con unas de repuesto
+          DB_USER: user
+          DB_PASSWORD: password
+          DB_NAME: laser_chess_db
+          DB_PORT: 5432
+
+      - name: Instalar golang
+        uses: actions/setup-go@v6
+        with: 
+          go-version: '1.25.x'
+    
+      - name: Instalar dependencias
+        run: |
+          go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@v4.18.3
+          go install github.com/sqlc-dev/sqlc/cmd/sqlc@v1.30.0
+          # Hay que añadir el path de go al path global o no encuentra los binarios
+          echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
+
+      - name: Esperar a que postgresql termine de levantarse
+        run: sleep 10
+         
+      - name: Hacer la build
+        run: make build
+        env:
+          DB_URL: "postgresql://user:password@localhost:5432/laser_chess_db?sslmode=disable"
+          
+      
