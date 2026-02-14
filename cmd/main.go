@@ -1,8 +1,20 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"fmt"
+	"os"
+
+	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
+)
 
 func main() {
+
+	// Cargar las variables de .env
+	godotenv.Load()
+
+	fmt.Println(os.Getenv("DB_URL"))
+
 	router := gin.Default()
 	router.GET("/ping", getHello)
 
