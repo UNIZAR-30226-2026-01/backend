@@ -10,6 +10,9 @@ postgres:
 migrate-up: postgres
 	migrate -path $(MIGRATION_PATH) -database "$(DB_URL)" -verbose up
 
+migrate-down: postgres
+	migrate -path $(MIGRATION_PATH) -database "$(DB_URL)" -verbose down
+
 sqlc: migrate-up
 	sqlc generate
 
@@ -29,6 +32,11 @@ new-migration:
 	migrate create -ext sql -dir $(MIGRATION_PATH) -seq $(name)
 
 
+migrate-up-1: postgres
+	migrate -path $(MIGRATION_PATH) -database "$(DB_URL)" -verbose up 1
 
+migrate-down-1: postgres
+	migrate -path $(MIGRATION_PATH) -database "$(DB_URL)" -verbose down 1
 
+migrate-reset: migrate-down migrate-up
 
