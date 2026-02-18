@@ -1,11 +1,10 @@
 package placeholder
 
 import (
-	"errors"
-	"log"
 	"net/http"
 	"strconv"
 
+	"github.com/UNIZAR-30226-2026-01/laser_chess_backend/internal/api/apierror"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,17 +19,13 @@ func NewHandler(s *PlaceholderService) *PlaceholderHandler {
 func (h *PlaceholderHandler) GetPlaceholder(c *gin.Context) {
 	id, err := strconv.ParseInt(c.Param("id"), 10, 32)
 	if err != nil {
-		h.sendError(c, http.StatusBadRequest, err)
+		apierror.SendError(c, http.StatusBadRequest, err)
 		return
 	}
 
 	res, err := h.service.GetByID(c.Request.Context(), int32(id))
 	if err != nil {
-		if errors.Is(err, ErrNotFound) {
-			h.sendError(c, http.StatusNotFound, err)
-		} else {
-			h.sendError(c, http.StatusInternalServerError, err)
-		}
+		apierror.DetectAndSendError(c, err)
 		return
 	}
 
@@ -47,26 +42,15 @@ func (h *PlaceholderHandler) CreatePlaceholder(c *gin.Context) {
 
 	// Mira si el json que nos han pasado coincide con el dto
 	if err := c.ShouldBindJSON(&body); err != nil {
-		h.sendError(c, http.StatusBadRequest, err)
+		apierror.SendError(c, http.StatusBadRequest, err)
 		return
 	}
 
 	res, err := h.service.Create(c.Request.Context(), body.Data)
 	if err != nil {
-		h.sendError(c, http.StatusInternalServerError, err)
+		apierror.DetectAndSendError(c, err)
 		return
 	}
 
 	c.JSON(http.StatusCreated, res)
-}
-
-// Método auxiliar para enviar errores genéricos
-// Habrá que meterlo en algun paquete de errores
-func (h *PlaceholderHandler) sendError(c *gin.Context, code int, err error) {
-	if err != nil {
-		log.Printf("DEBUG ERROR [%d]: %v", code, err)
-	}
-	c.AbortWithStatusJSON(code, gin.H{
-		"error": http.StatusText(code),
-	})
 }

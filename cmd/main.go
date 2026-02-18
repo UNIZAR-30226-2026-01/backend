@@ -5,8 +5,8 @@ import (
 	"log"
 	"os"
 
+	"github.com/UNIZAR-30226-2026-01/laser_chess_backend/internal/api/placeholder"
 	db "github.com/UNIZAR-30226-2026-01/laser_chess_backend/internal/db/sqlc"
-	"github.com/UNIZAR-30226-2026-01/laser_chess_backend/internal/placeholder"
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"

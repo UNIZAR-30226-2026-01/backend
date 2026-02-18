@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/UNIZAR-30226-2026-01/laser_chess_backend/internal/api/apierror"
 	db "github.com/UNIZAR-30226-2026-01/laser_chess_backend/internal/db/sqlc"
 	"github.com/jackc/pgx/v5"
 )
@@ -27,7 +28,7 @@ func (s *PlaceholderService) GetByID(ctx context.Context, id int32) (db.Placehol
 	res, err := s.queries.GetPlaceholder(ctx, id)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return db.Placeholder{}, ErrNotFound
+			return db.Placeholder{}, apierror.ErrNotFound
 		} else {
 			return db.Placeholder{}, err
 		}
