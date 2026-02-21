@@ -37,6 +37,13 @@ CREATE TYPE "item_type" AS ENUM (
 	'piece_skin'
 );
 
+CREATE TYPE "elo_type" AS ENUM (
+	'blitz',
+	'bullet',
+	'rapid',
+	'classic'
+);
+
 CREATE TABLE IF NOT EXISTS "account" (
 	"account_id" BIGSERIAL NOT NULL UNIQUE,
 	"password_hash" TEXT NOT NULL,
@@ -49,10 +56,6 @@ CREATE TABLE IF NOT EXISTS "account" (
 	"level" INTEGER NOT NULL,
 	"xp" INTEGER NOT NULL,
 	"money" INTEGER NOT NULL,
-	"elo_blitz" INTEGER NOT NULL,
-	"elo_bullet" INTEGER NOT NULL,
-	"elo_rapid" INTEGER NOT NULL,
-	"elo_classic" INTEGER NOT NULL,
 	"board_skin" INTEGER NOT NULL,
 	"piece_skin" INTEGER NOT NULL,
 	PRIMARY KEY("account_id"),
@@ -99,9 +102,6 @@ CREATE TABLE IF NOT EXISTS "match" (
 	FOREIGN KEY("p2_id") REFERENCES "account"("account_id")
 );
 
-
-
-
 CREATE TABLE IF NOT EXISTS "friendship" (
 	"user1_id" BIGINT NOT NULL,
 	"user2_id" BIGINT NOT NULL,
@@ -113,6 +113,13 @@ CREATE TABLE IF NOT EXISTS "friendship" (
 	CHECK ("user1_id" < "user2_id")
 );
 
+CREATE TABLE IF NOT EXISTS "rating" (
+	"user_id" BIGINT NOT NULL,
+	"elo_type" ELO_TYPE NOT NULL,
+	"value" BIGINT NOT NULL,
+	PRIMARY KEY("user_id", "elo_type"),
+	FOREIGN KEY("user_id") REFERENCES "account"("account_id")
+);
 
 
 
