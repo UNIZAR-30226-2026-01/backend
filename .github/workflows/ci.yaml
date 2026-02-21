@@ -32,7 +32,7 @@ jobs:
         run: sleep 10
          
       - name: Aplicar esquema de base de datos
-        run: make apply schema
+        run: make apply-schema
 
       - name: Hacer la build
         run: make build
